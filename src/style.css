@@ -1,0 +1,147 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.bg-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.3;
+    z-index: -3;
+}
+
+.node circle {
+    fill: rgba(105, 105, 105, 0.7);
+    stroke: rgba(105, 105, 105, 0.7);
+    stroke-width: 3px;
+}
+
+.node rect {
+    fill: #291002ca;
+    stroke: rgba(105, 105, 105, 0.7);
+    stroke-width: 2px;
+}
+
+.node text {
+    font: 15px sans-serif;
+}
+
+.link {
+    fill: none;
+    stroke: rgb(112, 128, 144,0.5);
+    stroke-width: 2px;
+}
+
+.flex-container{
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-item1 {
+
+    height: 500px;
+    width: 100%;
+    /* left: 60vw;
+    width: 39%;
+    height: 15%;
+    top: 2%;
+    position: absolute;
+    opacity: 0.7; */
+}
+
+.flex-item2 {
+    height: 500px;
+    width: 100%;
+    /* left: 60vw;
+    width: 38.5%;
+    height: 78%;
+    top: 18%;
+    position: absolute;
+    border: 3px solid rgb(43, 102, 149);
+    opacity: 0.7; */
+}
+
+.tree-container {
+
+    height: 100px;
+    width: 80%;
+    /* left: 1vw;
+    width: 58%;
+    top: 2%;
+    height: 15%;
+    position: absolute;
+    z-index: -2; */
+}
+
+#show-tree {
+    /* position: relative;
+    left: 1%;
+    top: 2%;
+    height: 100%;
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 15vh;
+    text-shadow: rgb(34, 34, 34) 2px 2px 3px;
+    background: rgb(0, 136, 0, 0.7);
+    border-radius: 6px; */
+    /* opacity: 0.7; */
+}
+
+#titlename {
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    font-weight: bold;
+    height: 100%;
+    line-height: 15vh;
+    text-shadow: rgb(34, 34, 34) 2px 2px 3px;
+    background: rgb(43, 102, 149);
+    border-radius: 6px;
+}
+
+#textbotton {
+
+}
+
+#div1 {
+        left: 760px;
+        width: 500px;
+        height: 80px;
+        border-style: solid;
+        border-width: 1px;
+        position: absolute;
+        border: 3px solid #0000CD;
+        opacity: 0.3;
+    }
+
+div#div2 {
+    left: 760px;
+    width: 500px;
+    height: 450px;
+    position: absolute;
+    top: 100px;
+    border: 3px solid #73AD21;
+    opacity: 0.7;
+}
+
+div#div3 {
+    width: 735px;
+    height: 543px;
+    position: absolute;
+    border: 3px solid #B22222;
+    opacity: 0;
+}

@@ -198,13 +198,10 @@ function treeInit(ttmpp) {
 }
 /*-----------------------初始化函数结束*------------------------*/
 
-// function rebuildTree(nodes, find_name, may_need);
-// function add_tree(node, innerTree);
 //自定义json长度查找函数,返回json树的下层子节点的长度(个数)
 function getJsonLength(jsonData) {
     var jsonLength = 0;
     for (var item in jsonData) {
-        //alert("Son is " + item);
         jsonLength++;
     }
     return jsonLength;
@@ -218,15 +215,13 @@ function rebuildTree(nodes, find_name, may_need, fatherTree, sonTree) {
     var returnTrue = 1;
     
     var length_now = getJsonLength(nodes.children);
-    // alert("chang = " + length_now)
     for (var ll = 0; ll < length_now; ll++) {
-        // alert(nodes.children[ll].name);
         if (nodes.children[ll].name == find_name) { //第ll个子节点的名字是否与要查找的相同
             
             ex_flag = 1;
 
             nodes.children[ll] = may_need; //将该json树添加到儿子节点作为关联
-            // alert("add success");
+
             if (fatherTree < sonTree) treeData[fatherTree] = treeData[fatherTree];
             else treeData[sonTree] = treeData[fatherTree];
             return returnTrue;
@@ -244,7 +239,7 @@ function rebuildTree(nodes, find_name, may_need, fatherTree, sonTree) {
 分割传输过来的数据并构造json树结构
 相当于主函数功能
 */
-function buildTree() {
+function textAnalyse() {
 
     var count = 0; //定义儿子节点的编号
     var flag = 0; //定义标志是否为关联树值为1
@@ -275,13 +270,12 @@ function buildTree() {
                 //处理冒号前的部分
                 if (head_tmp == "导师") {
 
-                    var daoshi2 = {
+                    var teacher = {
                         "name": body_tmp,
                         "parent": "null",
                         "children": [{}]
                     }
-                    treeData[treeNumber] = daoshi2; //将导师嵌入节点
-                    // console.log(treeData);
+                    treeData[treeNumber] = teacher; //将导师嵌入节点
 
                 } else {
                     var children = {
@@ -431,4 +425,4 @@ function getInfo(e) {
 }
 
 
-module.exports = tree;
+module.exports = getInfo;

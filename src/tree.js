@@ -198,7 +198,7 @@ function treeInit(ttmpp) {
 }
 /*-----------------------初始化函数结束*------------------------*/
 
-// function check(nodes, find_name, may_need);
+// function rebuildTree(nodes, find_name, may_need);
 // function add_tree(node, innerTree);
 //自定义json长度查找函数,返回json树的下层子节点的长度(个数)
 function getJsonLength(jsonData) {
@@ -213,40 +213,38 @@ function getJsonLength(jsonData) {
 /*
 检查函数，遍历之前所有树的所有子节点，查找是否有导师的学生也是导师的情况,若有此种情况则此树重构
 */
-function check(nodes, find_name, may_need, fatherTree, sonTree) {
-    var fanhui1 = 0;
-    var fanhui2 = 1;
-    // alert("checkcheckcheckcheckcheckcheck");
+function rebuildTree(nodes, find_name, may_need, fatherTree, sonTree) {
+    var returnFalse = 0;
+    var returnTrue = 1;
+    
     var length_now = getJsonLength(nodes.children);
     // alert("chang = " + length_now)
     for (var ll = 0; ll < length_now; ll++) {
         // alert(nodes.children[ll].name);
         if (nodes.children[ll].name == find_name) { //第ll个子节点的名字是否与要查找的相同
-            // alert("hhhhhhhhhhhhhh");
+            
             ex_flag = 1;
-            //add_tree(nodes.children[ll].children, may_need, keke);
-            // alert("add");
-            // alert(getJsonLength(may_need));
+
             nodes.children[ll] = may_need; //将该json树添加到儿子节点作为关联
             // alert("add success");
             if (fatherTree < sonTree) treeData[fatherTree] = treeData[fatherTree];
             else treeData[sonTree] = treeData[fatherTree];
-            return fanhui2;
+            return returnTrue;
 
         } else {
-            check(nodes.children[ll], find_name, may_need, fatherTree, sonTree);
+            rebuildTree(nodes.children[ll], find_name, may_need, fatherTree, sonTree);
             // return;
         }
     }
 
-    return fanhui1;
+    return returnFalse;
 }
 //追逐函数
 /*
 分割传输过来的数据并构造json树结构
 相当于主函数功能
 */
-function chase() {
+function buildTree() {
 
     var count = 0; //定义儿子节点的编号
     var flag = 0; //定义标志是否为关联树值为1
@@ -257,7 +255,7 @@ function chase() {
 
     model_data = all_data.split("\n\n");
 
-    count_shu = 0;
+    treeNumber = 0;
     //生成树型结构数据
     for (var j = 0; j < model_data.length; ++j) {
         //初始化变量
@@ -282,7 +280,7 @@ function chase() {
                         "parent": "null",
                         "children": [{}]
                     }
-                    treeData[count_shu] = daoshi2; //将导师嵌入节点
+                    treeData[treeNumber] = daoshi2; //将导师嵌入节点
                     // console.log(treeData);
 
                 } else {
@@ -291,16 +289,16 @@ function chase() {
                         "parent": "null",
                         "children": [{}]
                     }
-                    treeData[count_shu].children[count] = children; //将年级及职业嵌入节点
+                    treeData[treeNumber].children[count] = children; //将年级及职业嵌入节点
                     //处理冒号后的部分
                     var bodies = body_tmp.split("、");
-                    for (var kk = 0; kk < bodies.length; ++kk) {
+                    for (var k = 0; k < bodies.length; ++k) {
                         var children = {
-                            "name": bodies[kk],
+                            "name": bodies[k],
                             "parent": "null",
                         }
-                        //treeData.push(children);
-                        treeData[count_shu].children[count].children[kk] = children; //将姓名嵌入节点
+                        
+                        treeData[treeNumber].children[count].children[k] = children; //将姓名嵌入节点
 
                     }
                     count++; //第二子节点编号加一，生成下一个第二子节点
@@ -317,7 +315,7 @@ function chase() {
                 "parent": "null",
                 "children": [{}]
             }
-            treeData[count_shu] = daoshi;
+            treeData[treeNumber] = daoshi;
             var bodies = body_tmp.split("、");
             for (var g = 0; g < bodies.length; g++) {
                 var children1 = {
@@ -325,113 +323,111 @@ function chase() {
                     "parent": "null",
                 }
 
-                treeData[count_shu].children[g] = children1;
+                treeData[treeNumber].children[g] = children1;
             }
         }
         //一棵树型数据构造完成
-        //alert(treeData[j].length);
         //和前面所有的树比较，判断是否为关联树
-        var tree_tmp = treeData[count_shu];
-        var name_tmp = treeData[count_shu].name;
-        for (num_tmp = 0; num_tmp < count_shu; num_tmp++) {
-            check(treeData[num_tmp], name_tmp, tree_tmp, num_tmp, count_shu);
-            check(tree_tmp, treeData[num_tmp].name, treeData[num_tmp], count_shu, num_tmp);
+        var tree_tmp = treeData[treeNumber];
+        var name_tmp = treeData[treeNumber].name;
+        for (num_tmp = 0; num_tmp < treeNumber; num_tmp++) {
+            rebuildTree(treeData[num_tmp], name_tmp, tree_tmp, num_tmp, treeNumber);
+            rebuildTree(tree_tmp, treeData[num_tmp].name, treeData[num_tmp], treeNumber, num_tmp);
 
         }
-
-        if (!ex_flag) count_shu++; //若有关联树则独立树的棵数不增加
+        if (!ex_flag) treeNumber++; //若有关联树则独立树的棵数不增加
     }
-
     //生成所有树
-    for (var i = 0; i < count_shu; i++) {
+    for (var i = 0; i < treeNumber; i++) {
         treeInit(i)
     }
 
-    function getInfo(e) {
-        var count = 0; //定义儿子节点的编号
-        var flag = 0; //定义标志是否为关联树值为1
+}
 
-        var all_data = e;
-        var sclice_data = [];
-        var model_data = [];
+function getInfo(e) {
+    var count = 0; //定义儿子节点的编号
+    var flag = 0; //定义标志是否为关联树值为1
 
-        model_data = all_data.split("\n\n");
+    var all_data = e;
+    var sclice_data = [];
+    var model_data = [];
 
-        count_shu = 0;
-        //生成树型结构数据
-        for (var j = 0; j < model_data.length; ++j) {
-            //初始化变量
-            count = 0;
-            ex_flag = 0;
+    model_data = all_data.split("\n\n");
 
-            if (model_data[j].indexOf("导师") != -1) {
-                sclice_data = model_data[j].split("\n");
-                for (var i = 0; i < sclice_data.length; ++i) {
-                    var head_tmp = "";
-                    var body_tmp = "";
-                    //fflag = 0;
+    treeNumber = 0;
+    //生成树型结构数据
+    for (var j = 0; j < model_data.length; ++j) {
+        //初始化变量
+        count = 0;
+        ex_flag = 0;
 
-                    var hb = sclice_data[i].split("："); //从冒号分割一层字符串
-                    head_tmp = hb[0];
-                    body_tmp = hb[1];
-                    //处理冒号前的部分
-                    if (head_tmp == "导师") {
-
-                        var daoshi2 = {
-                            "name": body_tmp,
-                            "parent": "null",
-                            "children": [{}]
-                        }
-                        treeData[count_shu] = daoshi2; //将导师嵌入节点
-                        // console.log(treeData);
-
-                    } else {
-                        var children = {
-                            "name": head_tmp,
-                            "parent": "null",
-                            "children": [{}]
-                        }
-                        treeData[count_shu].children[count] = children; //将年级及职业嵌入节点
-                        //处理冒号后的部分
-                        var bodies = body_tmp.split("、");
-                        for (var kk = 0; kk < bodies.length; ++kk) {
-                            var children = {
-                                "name": bodies[kk],
-                                "parent": "null",
-                            }
-                            //treeData.push(children);
-                            treeData[count_shu].children[count].children[kk] = children; //将姓名嵌入节点
-
-                        }
-                        count++; //第二子节点编号加一，生成下一个第二子节点
-                    }
-                }
-            } else {
+        if (model_data[j].indexOf("导师") != -1) {
+            sclice_data = model_data[j].split("\n");
+            for (var i = 0; i < sclice_data.length; ++i) {
                 var head_tmp = "";
                 var body_tmp = "";
-                var hb = model_data[j].split("："); //从冒号分割一层字符串
+                //fflag = 0;
+
+                var hb = sclice_data[i].split("："); //从冒号分割一层字符串
                 head_tmp = hb[0];
                 body_tmp = hb[1];
-                var daoshi = {
-                    "name": head_tmp,
-                    "parent": "null",
-                    "children": [{}]
-                }
-                treeData[count_shu] = daoshi;
-                var bodies = body_tmp.split("、");
-                for (var g = 0; g < bodies.length; g++) {
-                    var children1 = {
-                        "name": bodies[g],
-                        "parent": "null",
-                    }
+                //处理冒号前的部分
+                if (head_tmp == "导师") {
 
-                    treeData[count_shu].children[g] = children1;
+                    var teacher = {
+                        "name": body_tmp,
+                        "parent": "null",
+                        "children": [{}]
+                    }
+                    treeData[treeNumber] = teacher; //将导师嵌入节点
+                    // console.log(treeData);
+
+                } else {
+                    var children = {
+                        "name": head_tmp,
+                        "parent": "null",
+                        "children": [{}]
+                    }
+                    treeData[treeNumber].children[count] = children; //将年级及职业嵌入节点
+                    //处理冒号后的部分
+                    var bodies = body_tmp.split("、");
+                    for (var kk = 0; kk < bodies.length; ++kk) {
+                        var children = {
+                            "name": bodies[kk],
+                            "parent": "null",
+                        }
+                        //treeData.push(children);
+                        treeData[treeNumber].children[count].children[kk] = children; //将姓名嵌入节点
+
+                    }
+                    count++; //第二子节点编号加一，生成下一个第二子节点
                 }
             }
-            
+        } else {
+            var head_tmp = "";
+            var body_tmp = "";
+            var hb = model_data[j].split("："); //从冒号分割一层字符串
+            head_tmp = hb[0];
+            body_tmp = hb[1];
+            var daoshi = {
+                "name": head_tmp,
+                "parent": "null",
+                "children": [{}]
+            }
+            treeData[treeNumber] = daoshi;
+            var bodies = body_tmp.split("、");
+            for (var g = 0; g < bodies.length; g++) {
+                var children1 = {
+                    "name": bodies[g],
+                    "parent": "null",
+                }
+
+                treeData[treeNumber].children[g] = children1;
+            }
         }
-        return sclice_data;
+        
     }
+    return sclice_data;
 }
 
 
